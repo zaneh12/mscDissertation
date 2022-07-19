@@ -1,0 +1,74 @@
+\chapter{Volatility Modelling Foundations}
+
+\section{The ARCH \& GARCH Processes}
+Because the aim of this research is to create, train and forecast accurate time series models, they must first be adequately introduced. As illustrated and explained earlier, returns of stock prices are non-linear in nature, stochastic processes, and have time variant instantaneous standard deviations/volatility. Because of this researchers have developed rigorous methods  to model these properties. 
+
+\subsection{Foundations}
+\subsubsection{Robert Engle}
+In the 50th volume of the Econometrica Journal published in July 1982, Robert F. Engle introduced a paper titled "Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation". This groundbreaking piece of work was extremely influential in leading the change in volatility modelling in econometrics. According to semantic scholar, the paper has been cited 19,974 times! On the 8th of October 2003, The Royal Swedish Academy of Sciences awarded Engle the Bank of Sweden Price in Economic Sciences in Memory of Alfred Nobel. They expalined: "He found that the concept of autoregressive conditional heteroskedasticity (ARCH) accurately captures the properties of many time series and developed methods for statistical modeling of time-varying volatility. His ARCH models have become indispensable tools not only for researchers, but also for analysts on financial markets, who use them in asset pricing and in evaluating portfolio risk" \cite{pressrelease_2003}. The paper introduced the concept that: " these are mean zero, serially uncorrelated processes with nonconstant variances conditional on the past, but constant unconditional variances. For such processes, the recent past gives information about the one-period forecast variance" \cite{engleOriginal}. 
+
+\subsubsection{Tim Bollerslev}
+In 1986 Tim Bollerslev took Engles ARCH Model one step further by creating a Generalized ARCH or GARCH Model. In his paper "Generalization of ARCH process" \cite{BOLLERSLEV1986307} he seeks to create a "more general class of process, GARCH, ... , allowing for a much more flexible lag structure" \cite{BOLLERSLEV1986307}. He took an imperical example of modelling inflation, by extending one of Engles papers from 1983's example. He compared his model, GARCH(1,1) with an ARCH(8) and found that: "In this light it seems that not only does the GARCH(1,1)model provide a slightly better fit than the ARCH(8) model in Engle and Kraft (1983), but it also exhibits a more reasonable lag structure" \cite{BOLLERSLEV1986307}. Fundamentally, the model extension lead to great gains and found that the research was able to be better explained using GARCH. 
+
+\subsection{Mathematics \& Interpretation}
+\subsubsection{ARCH}
+The Autoregressive Conditional Heteroscedasticity "ARCH" model introduced by Engle considers the volatility or instantaneous standard deviation of a time series independent from its mean function and implied by the name, that volatility is time variant \cite{carmona2004}. The model takes one parameter as an input and is generally written as $\mathbf{ARCH(P)}$ . The volatility at time point $\mathbf{t}$ is calculated by considering $\mathbf{p}$ time periods in the past's value of the series multiplied by some parameter $\alpha_1$ plus another intercept parameter $\alpha_0$.$$\{X_t\}_t \sim ARCH(p) \iff X_t = \sigma_tW_t$$This function implies that $W_t$ is white noise and $\sigma_t$ is a positive function of the previous $\mathbf{p}$ lags (observations in the time series) \cite{carmona2004}. For example, the function to calculate the standard deviation for an $\mathbf{ARCH(1)}$ process is as follows: 
+$$\sigma_t^2 = \alpha_0 + \sum^p_{j=1} \alpha_jX^2_{t-j}; ~ for~j = 1,2,...p$$This is not to say the only time period considered is p-behind, interestingly, the $\sigma_t$ is actually calculated as a weight decaying function of all of the previous lags in the time series, an infinite decay so to speak. 
+$$ 
+\sigma_t = \sqrt{\alpha_0(\sum^\infty_{j=0} \alpha_1^jW^2_{t-1}W^2_{t-2}...W^2_{t-j})}
+$$Intuitively this explains the auto regressive nature that the current position relies on all the previous lags with decaying levels of importance, where $W^2_{t-1}$ is of greatest weight.
+
+To intuitively understand the model, I find it best to consider a causal diagram of what actually affects the time series at $\mathbf{t}$. For an $\mathbf{ARCH(p)}$ process, 
+$$
+\xymatrix{
+{X_t} \ar[dr] \ar[r] &\mathbb{\epsilon_t} \\
+& \sigma_t \ar[r] & \hat{X}_{t-1}}
+$$
+Value of the time series at time point $\mathbf{t}$ t is calculated by white noise, multiplied by the square root of a constant, $\alpha_0$, plus a constant $\alpha_1$ multiplied by the value ofs time series squared: $\mathbf{\sigma_t\epsilon_t}$. As the diagram shows, the value of the time series, today, is affected by the random error $\epsilon_t$ today, as well as the volatility today. But, since the volatility is a function of the time series yesterday, we see that $\sigma_t$ is a function of $\sigma_{t-1}$. The autog regressive nature of the model, is simply an extension of the thought that $\sigma_t$ is a function of $\sigma_{t-1}$ because $\sigma_{t-1}$ is a function of $\sigma_{t-2}$ and so on and so forth. The weight of $\sigma_{t-n}$ to $\sigma_{t}$ depends on $\mathbf{|t-n|}$  \cite{GARCHYoutube}.
+
+ARCH models are thought of as being "bursty" since, from the causal diagram the observation at time point t in the series is dependent only on the last value of the time series it can yield high peaks but values that are not sustained. The idea of volatility clustering is not modelled as well as it could, as the model would identify the peak to the new level of the cluster, but not for 3,5,7 days for example of sustained volatility \cite{GARCHYoutube}
+
+\subsubsection{GARCH}
+
+The GARCH model by nature is just an extension of the $\mathbf{ARCH}$ with a $G$. $G$ stands for Generalized and thus $\mathbf{GARCH}$ has a parameter $\mathbf{p}$ but also a second $\mathbf{q}$ ie $\mathbf{GARCH(p,q)}$. 
+
+$$\{X_t\}_t \sim GARCH(p,q) \iff X_t = \mu_t+\sigma_tW_t$$
+
+The distinct difference with the $\mathbf{GARCH}$ model is that the white noise is Gaussian. The new equation for $\sigma^2_t$ the instantaneous or current volatility at the time point now is $$\sigma_t^2 = \sigma^2 + \sum^p_{j=1} \phi_j\sigma^2_{t-j}+ \sum^q_{j=1} \theta_j\hat{X}^2_{t-j}; ~ for~j = 1,2,...p$$  
+$$\mathbf{GARCH(1,1) ~~ : ~~~ }\sigma^2_t = \sigma^2 +\phi_1\sigma^2_{t-1}+\theta_1\hat{X}^2_{t-1}$$\cite{carmona2004}. Akin to ARCH, the model relies on the last $\mathbf{p}$ observation's value in the time series, but also the last $\mathbf{q}$ standard deviations. 
+For $\mathbf{GARCH}$, since there is an extra dependency for $\mathbf{GARCH(p,q)}$ not just $\mathbf{ARCH(p)}$, the causal diagram has another element!
+For a $\mathbf{GARCH(p,q)}$ process: 
+$$
+\xymatrix{
+{X_t} \ar[dr] \ar[r] &\mathbb{\epsilon_t} \\
+ & \sigma_t \ar[d] \ar[r] &\mathbb\hat{X}{_{t-1}} \\
+ & \sigma_{t-1}}
+$$
+In the $\mathbf{GARCH}$ case, the value of the time series at time point $\mathbf{t}$, is calcualted the same way $\mathbf{ARCH}$ is, but now not only is the volatility, at time point $\mathbf{t}$ a function of the time series $\hat{X}_{t-1}$ yesterday, but it is also a function of the volatility $\sigma_{t-1}$ yesterday hence the two arrows coming from $\sigma_t$\cite{GARCHYoutube}.
+
+Compared to ARCH the GARCH model lends itself to be better at modelling the volatility clusters. The model equation now shows that $\sigma_t$ the immediate or instantaneous volatility is a function of not only the last value of the time series but also the last value of the standard deviation. 
+
+\subsubsection{Further Extensions}
+
+The traditional $\mathbf{GARCH}$ model is the typical symmetric model that generally is used as it is extremely powerful and accurate, but over the years since Bollserslev proposed the paper there have been different derivative models. Discussed now are univariate models, where it takes one input, in this case log/continuous returns. There are also different models such as Exponential $\mathbf{GARCH}$ $\mathbf{(EGARCH)}$ Asymmetric $\mathbf{(GARCH)}$ $\mathbf{(AGARCH)}$, $\mathbf{GJR-GARCH}$, $\mathbf{TGARCH}$, $\mathbf{(APGARCH)}$, \textbf{GARCH}. These models derive different variances by modifying the generalized equation. For example, a very useful model, $\mathbf{(EGARCH)}$  the log of the variance instead of the variance for $\mathbf{(q)}$. \cite{GARCHMODels}
+
+\section{Dynamic Conditional Correlation (DCC)}
+To compare the volatility forecast from a univariate $\mathbf{GARCH(p,q)}$ model (modelling a single variable, continuous returns) with a multivariate model (two variables, continuous returns, Irithmics probabilities) I employed what is called a Dynamic Conditional Correlation "DCC" to evaluate the correlation. This model was again founded by the founder of the $\mathbf{ARCH(p)}$ model, Robert Engle. These models are said to be a "Simple Class" of multivariate GARCH models, but their strength is in its flexibility akin to a univariate GARCH process, while still a parameterized model. The models themsevles are not linear in nature, but do use maximum likelihood estimation and are empirically effective \cite{DCC}.   
+The intuition behind this model is similar to that of the $\mathbf{ARCH/GARCH}$: Like volatility over time, the correlation between the volatilites of two time series' are not static, but instead dynamic and modelling them as an average over time instead of continuously dynamic is inadequate. Statically, conditional correlation between two observations is seen as:
+$$ 
+\rho_{1,2} = \frac{E_{t-1}(r_{1,t}r_{2_t})}{\sqrt{E_{t-1}(r_{1,t}^2r_{2_t}^2})}
+$$
+In order to transform this function into a dynamic and generalisable method, the company $RiskMetrics^{TM}$ has proposed using decaying weights through a $\lambda$ parameter. This has a drawback of an expanding window where correlations n periods behind are not being omitted, when they are clearly uninformative. The additional issue as found in many smoothing problems is there is no optimal parameter for $\lambda$, RM sets it equal to 0.94, but that is by no means optimal for all problems
+$$
+\hat{\rho}_{1,2} = \frac{\sum^{t-1}_{s=1}\lambda^{t-j-1}(r_{1,s}r_{2_s})}
+{\sqrt{\sum^{t-1}_{s=1}\lambda^{t-j-1}(r_{1,s}^2r_{2_s}^2})}
+$$
+
+The way Engle remedied this impass was by using a "natural alternative" to exponential smoothing, by instead using the GARCH(1,1) model and incorporating the correlation estimator giving the covariance matrix: $Q_t = |q_{i,j,t}|$ which is " is a weighted average of a positive definite and a positive semidefinite matrix" \cite{DCC}. The mathematics is quite complicated, but it is easily implemented in Python. 
+
+\section{GARCH with Exogenous Regressor}
+In order to fit this exogenous covariate of Irithmics probabilities, the univariate $\mathbf{GARCH}$ model must be extended. The choice for this research was, using the probabilities themselves as an exogenous regressor. Letting the next out of sample regressor be equal to $\pi$, the multivariate $\mathbf{GARCH}$ model is:
+
+$$
+\sigma_t^2 = \sigma^2 + \sum^p_{j=1} \phi_j\sigma^2_{t-j}+ \sum^q_{j=1} \theta_j\hat{X}^2_{t-j} + \beta_0 + \beta_1[\pi_1,t] ; ~ for~j = 1,2,...p
+$$

@@ -1,0 +1,90 @@
+
+\section{ARCH, GARCH Processes}
+It would be naive to assume that the world and its physical organisms and economic outcoms are linear in nature. Clearly that leads us to the bread and butter, the crue de tah if you will of nonlinear modelling. ARCH and GARCH processes. The stylized facts of stock market returns lead us to this place, we have uncorelated returns, but we may have dependence across successfive terms. 
+
+\subsection{Origins}
+\subsubsection{Robert Engle}
+In the 50th volume of the Econometrica Journal published in July 1982, Robert F. Engle introduced a paper titled "Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation". This groundbreaking piece of work was extremely influential in leading the change in volatility modelling in econometrics. According to semantic scholar, the paper has been cited 19,974 times! On the 8th of October 2003, The Royal Swedish Academy of Sciences awarded Engle the Bank of Sweden Price in Economic Sciences in Memory of Alfred Nobel. They expalined: "He found that the concept of autoregressive conditional heteroskedasticity (ARCH) accurately captures the properties of many time series and developed methods for statistical modeling of time-varying volatility. His ARCH models have become indispensable tools not only for researchers, but also for analysts on financial markets, who use them in asset pricing and in evaluating portfolio risk" \cite{pressrelease_2003}. The paper introduced the concept that: " these are mean zero, serially uncorrelated processes with nonconstant variances conditional on the past, but constant unconditional variances. For such processes, the recent past gives information about the one-period forecast variance" \cite{engleOriginal}. 
+
+\subsubsection{Tim Bollerslev}
+In 1986 Tim Bollerslev took Engles ARCH Model one step further by creating a Generalized ARCH or GARCH Model. In his paper "Generalization of ARCH process" \cite{BOLLERSLEV1986307} he seeks to create a "more general class of process, GARCH, ... , allowing for a much more flexible lag structure" \cite{BOLLERSLEV1986307}. He took an imperical example of modelling inflation, by extending one of Engles papers from 1983's example. He compared his model, GARCH(1,1) with an ARCH(8) and found that: "In this light it seems that not only does the GARCH(1,1)model provide a slightly better fit than the ARCH(8) model in Engle and Kraft (1983), but it also exhibits a more reasonable lag structure" \cite{BOLLERSLEV1986307}. Fundamentally, the model extension lead to great gains and found that the research was able to be better explained using GARCH. 
+
+\subsection{ARCH Models}
+One must model the volatilty of some series in order to model it properly, and in order to do this one must view this process independent of its mean function \cite{carmona2004}. Carmona claims that this is neccessary for two reasons: 1) the volatility/variance/standard deviation is time variant or heteroskedastic 2) to create a heavy tailed dstribution, it is easier to mix normal distributions with differing variances \cite{carmona2004}. This volatility or "instant standard deviation" lead to the ARCH model. ARCH stands for Auto-Regressive Conditional Heteroskedasticity. This makes sense as the function itself is autoregressive but also conditionally heteroskedasticitc meaning its variance is conditional on (p) lags behind the current timepoint t, t-p if you will. 
+
+$$\{X_t\}_t \sim ARCH(p) \iff X_t = \sigma_tW_t$$ This function implies that $W_t$ is white noise and $\sigma_t$ is a positive function of the previous lags which is the p part of arch p $$\sigma_t^2 = \alpha_0 + \sum^p_{j=1} \alpha_jX^2_{t-j}; ~ for~j = 1,2,...p$$ \cite{carmona2004}.
+
+This function can be simplified to simply say for $ARCH(1)$
+$$X_t = \sigma_tW_t ~ ~ where ~\sigma_t = \sqrt{\alpha_0\bigg(\sum^\infty_{j=0} \alpha_1^jW_{t-1}^2W{t-2}^2...W_{t-j}^2)}$$
+
+Intuitively this explains the auto regressive nature that the current position relies on all the previous lags with decaying levels of imporance, where $alpha_0$ is of greatest weight and then going all the way down to the last lag is realistically nothing. This would be the ARCH(1) model example which is the most common way to look at it the last lag depends only on one which depends back and back. 
+
+\subsection{GARCH}
+
+The GARCH model by nature is just an extension of the ARCh with a G. G stands for Generalized and GARCH has a p and a q ie GARCH(p,q). 
+
+$$\{X_t\}_t \sim GARCH(p,q) \iff X_t = \mu_t+\sigma_tW_t$$
+
+The distinct difference with the garch model is that the white noise is gaussian. The new equation for $\sigma^2_t$ the instantaneous or current volatility at the timepoint now is $$\sigma_t^2 = \sigma^2 + \sum^p_{j=1} \phi_j\sigma^2_{t-j}+ \sum^q_{j=1} \theta_j\hat{X}^2_{t-j}; ~ for~j = 1,2,...p$$ \cite{carmona2004}.
+
+This is an extension as if we set q = 0 this would just be a garch model. So now the causal diagram would look something like $$ Look on RITVIKS video$$.
+
+To make it more simple again look at a GARCH(1,1) 
+$$\sigma^2_t = \sigma^2 +\phi_1\sigma^2_{t-1}+\theta_1\hat{X}^2_{t-1}$$
+
+So the model relies on 1 lag for each the last standard deviation and the last lag or miss or whatever you wanna call it.
+
+\subsection{Interpretation}
+\subsubsection{ARCH}
+The simple way to think about how the ARCH and GARCH work is to think of a causal diagram of what affects the time series value at timepoint t?    
+For an ARCH(p) process, 
+
+$$
+\xymatrix{
+{X_t} \ar[dr] \ar[r] &\mathbb{\epsilon_t} \\
+ & \sigma_t \ar[r] & \hat{X}_{t-1}}
+$$
+Value of the time series at timepoint t is calcualted by white noise, multiplied by the square root of a constant + a constant times the value of yesterday's time series squared. $\epsilon_t\sigma_t$. The value of the time series, today, is affected by the random error$\epsilon_t$ today, as well as the volatility today. But, since the volatility is a function of the time series yesterday, we see that $\sigma_t$ is a function of $\sigma_{t-1}$. 
+
+The way that one could interpret an ARCH model is by the term "Bursty" since, from the causal diagram the observation at timepoint t in the series is dependent only on the last standard deviations sometimes it can yield high peaks but unsustained values. The idea of volatility clustering is not modelled as well as it could, as the model would identify the peak to the new level of the cluster, but not for 3,5,7 days for example of sustained volatility. 
+\subsubsection{GARCH}
+For GARCH, since there is an extra dependency for GARCH(p,q) not just ARCH(p), the causal diagram has another element!
+For a GARCH(p,q) process: 
+$$
+\xymatrix{
+{X_t} \ar[dr] \ar[r] &\mathbb{\epsilon_t} \\
+ & \sigma_t \ar[d] \ar[r] &\mathbb\hat{X}{_{t-1}} \\
+  & \sigma_{t-1} & 
+  }
+$$
+In the GARCH Case, the value of the time series at timepoint t, is calcualted the same way ARCH is, but now not only is the immediate volatility, or volatility, sd at timepoint a function of the time series yesterday, but it is also a function of the volatility yesterday hence the two arrows coming from $\sigma_t$
+\cite{GARCHYoutube}
+Compared to ARCH the GARCH model lends itself to be better at modelling the volatility clusters. The model equation now shows that $\sigma_t$ the immediate or instantaneous volatility is a function of not only the last value of the time series but also the last value of the standard deviation. This extension helps with the clustering of the volatility as it integrates the last standard deviation. 
+\subsection{Extensions}
+The traditional GARCH model is the typical symmetric model that generally is used as it is extremely powerful and accurate, but over the years since Bollserslev proposed the paper there have been different derivative models. Discussed now are univariate models, where it takes one input, in this case log/continuous returns. There are also different models such as Exponential GARCH (EGARCH), Assymetric GARCH (AGARCH), GJR GARCH, TGARCH, APGARCH, GARCH-M. These are all tweaks to the general garch model. They have the same basis but for example the EGARCH takes the log of the variance instead of the variance for p, the T garch takes the standard deviation for the GJR garch not the variance. \cite{GARCHMODels}
+
+\section{Wisdom of the Crowds}
+\subsection{Book}
+In 2004 James Surowiecki, a staff writer at the New Yorker, wrote the book: "The Wisdom of Crowds: Why the Many Are Smarter Than the Few and How Collective Wisdom Shapes Business, Economies, Societies and Nations". The book spoke on his belief that effective and accurate decision making can almost always be improved by aggregating individual forecasts/predictions/decisions rather than individuals making decisions on their own. The simplest example from the book was the old story about Sir Francis Galton, being taken back at a silly carnival game for a crowd to guess the weight of an ox. The mean of the guesses was accurate, while the individual guesses themselves were no good. This is what the wisdom of the crowds or aggregation of the crowd intellegence. This isnt a statistical text, but gives an idea into how the concept of forecast aggregation and crowd wisdom can play into this research paper. The irithmics data aggregates their perceived action from the crowd. On day X, there is a Y\% chance that the >250,000 funds surveyed will short stock Z. If they are shorting stock Z, they are hoping that the stock will go down as they are in the business of making money of their trades. So, the question now becomes, are the crowds wise? are the fund managers aggregated forecasts better than picking say, one fund at Bridgewater associates, one trader at Jane Street? This paper hopes to incorporate that information, not for stock prices, but to help with the predictions of Volatility within the volatilty forecasts.   
+
+The book also acknowledges that all group forecasts aren't created equal. To identify a "wise" crowd there must be: 
+\begin{enumerate}
+    \item Diversity of Opinion
+    \item Independence
+    \item Decentralization
+    \item Aggregation 
+    \item Trust
+\end{enumerate}
+\cite{wiki:crowds}
+These ideas for using crowd sourced things can be useful in statistical context, each of these items can be good steps for proper data sampling. *** Can extend here if needed** Conversely, there are some integral failures of the crowd. These intuitively are the inverse of a smart crowd: 
+\begin{enumerate}
+    \item Homogeneity
+    \item Centralization 
+    \item Division
+    \item Imitation
+    \item Emotionality
+\end{enumerate}
+\cite{wiki:crowds} The idea would to be cognozent of the data sampled and the derived forecast one would use. This comes back to the garbage in garbage out modelling, where the data is the most important piece of modelling. One would want to obtain varying forecasts to aggregate from every sence of varying. SES, Demographics location time etc etc spatial temporal. 
+\subsection{Application}
+The interesting part of this is that the forecast aggregation has already happened and this project seeks to do slightly more. The difference is there is also a question of whether or not the forecast itself carries any relevance in the topic. Irithmics aggregated their machine's deep learning prediction on when the aggregation of funds will sell a stock, but is this relevant to the volatility and can this aggregation be aggregated with the empirical forecast. 
+
